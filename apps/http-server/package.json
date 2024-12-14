@@ -1,14 +1,22 @@
 {
    "name": "http-server",
+   "version": "1.0.0",
    "scripts": {
-      "dev": "npm run build && npm run start",
-      "start": "node dist/index.js",
-      "build": "npx esbuild src/index.ts --bundle --outfile=dist/index.js --platform=node --tsconfig=tsconfig.json && tsc-alias"
+      "dev": "tsx watch src/index.ts",
+      "start": "node ./dist/src/index.js",
+      "format": "prettier --write .",
+      "test": "vitest",
+      "lint": "eslint .",
+      "lint:fix": "eslint --fix",
+      "build": "tsc && tsc-alias",
+      "db:generate": "prisma generate",
+      "db:push": "prisma db push",
+      "db:pull": "prisma db pull",
+      "postinstall": "npx prisma generate"
    },
    "dependencies": {
       "@hono/node-server": "^1.13.7",
       "@hono/zod-openapi": "^0.18.3",
-      "@repo/database": "workspace:*",
       "@scalar/hono-api-reference": "^0.5.164",
       "dotenv": "^16.4.7",
       "dotenv-expand": "^12.0.1",
@@ -18,10 +26,12 @@
       "pino": "^9.5.0",
       "stoker": "^1.4.2",
       "tsc-alias": "^1.8.10",
-      "zod": "^3.24.1"
+      "zod": "^3.24.1",
+      "@prisma/client": "^5.10.2"
    },
    "devDependencies": {
       "@types/node": "^20.11.17",
-      "tsx": "^4.7.1"
+      "tsx": "^4.7.1",
+      "prisma": "^5.10.2"
    }
 }
