@@ -1,5 +1,5 @@
 {
-   "name": "hono-node-server",
+   "name": "metaverse-http-server",
    "type": "module",
    "version": "1.0.0",
    "scripts": {
