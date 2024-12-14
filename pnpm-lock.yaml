@@ -29,9 +29,6 @@ importers:
       '@prisma/client':
         specifier: ^5.10.2
         version: 5.22.0(prisma@5.22.0)
-      '@repo/database':
-        specifier: workspace:*
-        version: link:../../packages/database
       '@scalar/hono-api-reference':
         specifier: ^0.5.164
         version: 0.5.164(hono@4.6.13)
@@ -75,9 +72,6 @@ importers:
 
   apps/web:
     dependencies:
-      '@repo/database':
-        specifier: workspace:*
-        version: link:../../packages/database
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -144,16 +138,6 @@ importers:
         version: 3.4.1
 
   packages/config-typescript: {}
-
-  packages/database:
-    dependencies:
-      '@prisma/client':
-        specifier: ^5.10.2
-        version: 5.22.0(prisma@5.22.0)
-    devDependencies:
-      prisma:
-        specifier: ^5.10.2
-        version: 5.22.0
 
   packages/ui:
     dependencies:
