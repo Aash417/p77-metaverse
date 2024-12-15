@@ -26,6 +26,7 @@ const EnvSchema = z.object({
       'silent',
    ]),
    DATABASE_URL: z.string().url(),
+   JWT_PASSWORD: z.string(),
 });
 
 export type env = z.infer<typeof EnvSchema>;

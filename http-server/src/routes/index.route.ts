@@ -12,8 +12,8 @@ export const index = createRouter().openapi(
       path: '/',
       responses: {
          [httpStatusCodes.OK]: jsonContent(
-            createMessageObjectSchema('stoker custom message'),
-            'api index',
+            createMessageObjectSchema('metaverse http api'),
+            'API INDEX',
          ),
       },
    }),
@@ -21,7 +21,7 @@ export const index = createRouter().openapi(
    (c) => {
       return c.json(
          {
-            message: 'hono node api',
+            message: 'metaverse http api',
          },
          httpStatusCodes.OK,
       );

@@ -7,7 +7,7 @@ import { admin } from '@/routes/admin/admin.index';
 import { user } from '@/routes/user/user.index';
 
 const app = createApp();
-const routes = [index, auth, space, admin, user] as const;
+const routes = [index, auth, admin, user, space] as const;
 
 configureOpenApi(app);
 

@@ -12,7 +12,7 @@ model User {
   username String  @unique
   password String
   avatarId String?
-  role     Role
+  role     Role    @default(User)
   spaces   Space[]
   avatar   Avatar? @relation(fields: [avatarId], references: [id])
 }
