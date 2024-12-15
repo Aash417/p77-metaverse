@@ -6,6 +6,7 @@ import { notFound, onError, serveEmojiFavicon } from 'stoker/middlewares';
 import { defaultHook } from 'stoker/openapi';
 
 import type { AppBinding, AppOpenApi } from '@/lib/types';
+import { userMiddleware } from '@/middlewares/userMiddleware';
 
 expand(config());
 
@@ -14,6 +15,7 @@ export default function createApp() {
 
    app.use(serveEmojiFavicon('🔥'));
    app.use(logger());
+   app.use('/user/*', userMiddleware);
 
    // for detailed logs use pino logger.
    // app.use(pinoLogger());

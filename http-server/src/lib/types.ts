@@ -5,6 +5,7 @@ import { z } from 'zod';
 export interface AppBinding {
    Variables: {
       logger: PinoLogger;
+      userId: string;
    };
 }
 
@@ -76,11 +77,25 @@ export const CreateMapSchema = z.object({
    ),
 });
 
-declare global {
-   namespace Express {
-      export interface Request {
-         role?: 'Admin' | 'User';
-         userId?: string;
-      }
-   }
-}
+export const UserIdsSchema = z.object({
+   ids: z.string().openapi({
+      param: {
+         name: 'ids',
+         in: 'path',
+         required: true,
+      },
+      required: ['ids'],
+      example: '[4,5,6]',
+   }),
+});
+
+export const UsersMetaDataSchema = z.object({
+   avatars: z.array(
+      z.object({
+         userId: z.string(),
+         avatarId: z.string().nullable().optional(),
+      }),
+   ),
+});
+
+export type UsersMetaData = z.infer<typeof UsersMetaDataSchema>;
