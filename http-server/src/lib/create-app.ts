@@ -16,6 +16,7 @@ export default function createApp() {
    app.use(serveEmojiFavicon('🔥'));
    app.use(logger());
    app.use('/user/*', userMiddleware);
+   app.use('/space/*', userMiddleware);
 
    // for detailed logs use pino logger.
    // app.use(pinoLogger());

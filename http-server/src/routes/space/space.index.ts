@@ -6,6 +6,6 @@ export const space = createRouter()
    .openapi(routes.createSpace, handler.createSpace)
    .openapi(routes.deleteSpace, handler.deleteSpace)
    .openapi(routes.getAllSpace, handler.getAllSpace)
-   .openapi(routes.createElement, handler.createElement)
-   .openapi(routes.deleteElement, handler.deleteElement)
+   .openapi(routes.addElement, handler.addElement)
+   .openapi(routes.removeElement, handler.removeElement)
    .openapi(routes.getSpace, handler.getSpace);

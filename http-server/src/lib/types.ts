@@ -99,3 +99,36 @@ export const UsersMetaDataSchema = z.object({
 });
 
 export type UsersMetaData = z.infer<typeof UsersMetaDataSchema>;
+
+export const SpaceIdSchema = z.object({
+   spaceId: z.string(),
+});
+
+export const GetAllSpacesSchema = z.object({
+   spaces: z.array(
+      z.object({
+         id: z.string(),
+         name: z.string(),
+         dimensions: z.string(),
+         thumbnail: z.string().nullable(),
+      }),
+   ),
+});
+
+export const MySpaceSchema = z.object({
+   dimensions: z.string(),
+   elements: z.array(
+      z.object({
+         id: z.string(),
+         element: z.object({
+            id: z.string(),
+            imageUrl: z.string(),
+            width: z.number(),
+            height: z.number(),
+            static: z.boolean(),
+         }),
+         x: z.number(),
+         y: z.number(),
+      }),
+   ),
+});
