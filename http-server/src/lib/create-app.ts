@@ -6,6 +6,8 @@ import { notFound, onError, serveEmojiFavicon } from 'stoker/middlewares';
 import { defaultHook } from 'stoker/openapi';
 
 import type { AppBinding, AppOpenApi } from '@/lib/types';
+
+import { adminMiddleware } from '@/middlewares/adminMiddleware';
 import { userMiddleware } from '@/middlewares/userMiddleware';
 
 expand(config());
@@ -17,6 +19,7 @@ export default function createApp() {
    app.use(logger());
    app.use('/user/*', userMiddleware);
    app.use('/space/*', userMiddleware);
+   app.use('/admin/*', adminMiddleware);
 
    // for detailed logs use pino logger.
    // app.use(pinoLogger());

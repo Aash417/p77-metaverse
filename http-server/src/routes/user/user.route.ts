@@ -8,6 +8,7 @@ import {
    UserIdsSchema,
    UsersMetaDataSchema,
 } from '@/lib/types';
+
 const tags = ['User'];
 
 export const userMetadata = createRoute({

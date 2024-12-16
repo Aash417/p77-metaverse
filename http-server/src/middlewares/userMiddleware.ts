@@ -1,6 +1,8 @@
-import env from '@/env';
-import { Context, Next } from 'hono';
+import type { Context, Next } from 'hono';
+
 import jwt from 'jsonwebtoken';
+
+import env from '@/env';
 
 export async function userMiddleware(c: Context, next: Next) {
    const authHeader = c.req.header('Authorization');

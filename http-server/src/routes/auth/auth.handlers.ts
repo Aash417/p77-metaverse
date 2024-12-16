@@ -2,10 +2,11 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import * as httpStatusCode from 'stoker/http-status-codes';
 
-import { db } from '@/db';
-import env from '@/env';
 import type { AppRouteHandler } from '@/lib/types';
 import type { SigninRoute, SignupRoute } from '@/routes/auth/auth.route';
+
+import { db } from '@/db';
+import env from '@/env';
 
 export const signin: AppRouteHandler<SigninRoute> = async (c) => {
    const body = c.req.valid('json');
@@ -15,18 +16,20 @@ export const signin: AppRouteHandler<SigninRoute> = async (c) => {
          username: body.username,
       },
    });
-   if (!user)
+   if (!user) {
       return c.json(
          { message: 'user does not exists in database' },
          httpStatusCode.NOT_FOUND,
       );
+   }
 
    const isPasswordValid = await bcrypt.compare(body.password, user.password);
-   if (!isPasswordValid)
+   if (!isPasswordValid) {
       return c.json(
          { message: 'Incorrect password' },
          httpStatusCode.UNAUTHORIZED,
       );
+   }
 
    const token = jwt.sign(
       {
@@ -47,11 +50,12 @@ export const signup: AppRouteHandler<SignupRoute> = async (c) => {
    const exists = await db.user.findFirst({
       where: { username: body.username },
    });
-   if (exists)
+   if (exists) {
       return c.json(
          { message: 'user already exists' },
          httpStatusCode.UNPROCESSABLE_ENTITY,
       );
+   }
 
    const user = await db.user.create({
       data: {
@@ -59,11 +63,12 @@ export const signup: AppRouteHandler<SignupRoute> = async (c) => {
          password: hashedPassword,
       },
    });
-   if (!user)
+   if (!user) {
       return c.json(
          { message: 'Signed up successfully' },
          httpStatusCode.INTERNAL_SERVER_ERROR,
       );
+   }
 
    return c.json({ id: user.id }, httpStatusCode.OK);
 };

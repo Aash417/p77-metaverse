@@ -1,7 +1,6 @@
 import * as httpStatusCode from 'stoker/http-status-codes';
 import * as HttpStatusPhrases from 'stoker/http-status-phrases';
 
-import { db } from '@/db';
 import type { AppRouteHandler } from '@/lib/types';
 import type {
    AddElement,
@@ -12,6 +11,8 @@ import type {
    RemoveElement,
 } from '@/routes/space/space.route';
 
+import { db } from '@/db';
+
 export const createSpace: AppRouteHandler<CreateSpace> = async (c) => {
    const body = c.req.valid('json');
    const userId = c.get('userId');
@@ -20,8 +21,8 @@ export const createSpace: AppRouteHandler<CreateSpace> = async (c) => {
       const space = await db.space.create({
          data: {
             name: body.name,
-            width: parseInt(body.dimensions.split('x')[0]),
-            height: parseInt(body.dimensions.split('x')[0]),
+            width: Number.parseInt(body.dimensions.split('x')[0]),
+            height: Number.parseInt(body.dimensions.split('x')[0]),
             creatorId: userId,
          },
       });
@@ -42,7 +43,7 @@ export const createSpace: AppRouteHandler<CreateSpace> = async (c) => {
    if (!map)
       return c.json({ message: 'Map not found' }, httpStatusCode.NOT_FOUND);
 
-   let space = await db.$transaction(async () => {
+   const space = await db.$transaction(async () => {
       const space = await db.space.create({
          data: {
             name: body.name,
@@ -63,11 +64,12 @@ export const createSpace: AppRouteHandler<CreateSpace> = async (c) => {
 
       return space;
    });
-   if (!space)
+   if (!space) {
       return c.json(
          { message: 'Failed to create space' },
          httpStatusCode.INTERNAL_SERVER_ERROR,
       );
+   }
 
    return c.json({ spaceId: space.id }, httpStatusCode.OK);
 };
@@ -87,11 +89,12 @@ export const deleteSpace: AppRouteHandler<DeleteSpace> = async (c) => {
       );
    }
 
-   if (userId !== space?.creatorId)
+   if (userId !== space?.creatorId) {
       return c.json(
          { message: 'Unauthorized to performe this action' },
          httpStatusCode.FORBIDDEN,
       );
+   }
 
    await db.space.delete({
       where: { id: spaceId },
@@ -148,11 +151,12 @@ export const addElement: AppRouteHandler<AddElement> = async (c) => {
       body.y < 0 ||
       body.x > space.width ||
       body.y > space.height
-   )
+   ) {
       return c.json(
          { message: 'Point is outside of the boundary' },
          httpStatusCode.BAD_REQUEST,
       );
+   }
 
    await db.spaceElements.create({
       data: {
@@ -177,11 +181,12 @@ export const removeElement: AppRouteHandler<RemoveElement> = async (c) => {
    if (
       !spaceElement?.space.creatorId ||
       spaceElement.space.creatorId !== userId
-   )
+   ) {
       return c.json(
          { message: 'Unauthorized to performe this action' },
          httpStatusCode.FORBIDDEN,
       );
+   }
 
    await db.spaceElements.delete({
       where: { id: body.id },
