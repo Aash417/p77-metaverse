@@ -1,6 +1,7 @@
-import { db } from '@/db';
 import type { AppRouteHandler } from '@/lib/types';
 import type { UserBulkMetadata, UserMetadata } from '@/routes/user/user.route';
+
+import { db } from '@/db';
 
 export const userMetadata: AppRouteHandler<UserMetadata> = async (c) => {
    const userId = c.get('userId');

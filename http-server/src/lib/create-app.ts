@@ -7,8 +7,8 @@ import { defaultHook } from 'stoker/openapi';
 
 import type { AppBinding, AppOpenApi } from '@/lib/types';
 
-import { adminMiddleware } from '@/middlewares/adminMiddleware';
-import { userMiddleware } from '@/middlewares/userMiddleware';
+import { adminMiddleware } from '@/middlewares/admin-middleware';
+import { userMiddleware } from '@/middlewares/user-middleware';
 
 expand(config());
 

@@ -3,7 +3,12 @@ import jwt from 'jsonwebtoken';
 import * as httpStatusCode from 'stoker/http-status-codes';
 
 import type { AppRouteHandler } from '@/lib/types';
-import type { SigninRoute, SignupRoute } from '@/routes/auth/auth.route';
+import type {
+   GetAllAvatarsRoute,
+   GetAllElementsRoutes,
+   SigninRoute,
+   SignupRoute,
+} from '@/routes/index/index.route';
 
 import { db } from '@/db';
 import env from '@/env';
@@ -71,4 +76,18 @@ export const signup: AppRouteHandler<SignupRoute> = async (c) => {
    }
 
    return c.json({ id: user.id }, httpStatusCode.OK);
+};
+
+export const getAllAvatars: AppRouteHandler<GetAllAvatarsRoute> = async (c) => {
+   const allAvatars = await db.avatar.findMany();
+
+   return c.json({ avatars: allAvatars }, httpStatusCode.OK);
+};
+
+export const getAllElements: AppRouteHandler<GetAllElementsRoutes> = async (
+   c,
+) => {
+   const allElements = await db.element.findMany();
+
+   return c.json({ elements: allElements }, httpStatusCode.OK);
 };

@@ -4,6 +4,6 @@ import * as routes from '@/routes/admin/admin.route';
 
 export const admin = createRouter()
    .openapi(routes.createElement, handler.createElement)
-   .openapi(routes.updateElement, handler.updateElement)
    .openapi(routes.createAvatar, handler.createAvatar)
-   .openapi(routes.createMap, handler.createMap);
+   .openapi(routes.createMap, handler.createMap)
+   .openapi(routes.updateElement, handler.updateElement);

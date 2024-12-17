@@ -4,7 +4,12 @@ import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createMessageObjectSchema } from 'stoker/openapi/schemas';
 import { z } from 'zod';
 
-import { SigninSchema, SignupSchema } from '@/lib/types';
+import {
+   AvatarsSchema,
+   ElementsSchema,
+   SigninSchema,
+   SignupSchema,
+} from '@/lib/types';
 
 const tags = ['Auth'];
 
@@ -52,11 +57,31 @@ export const signup = createRoute({
          'THE_VALIDATION_ERROR',
       ),
       [httpStatusCode.UNPROCESSABLE_ENTITY]: jsonContent(
-         createMessageObjectSchema('User alread exists'),
+         createMessageObjectSchema('User already exists'),
          'SERVER_ERROR',
       ),
    },
 });
 
+export const getAllAvatars = createRoute({
+   tags,
+   path: '/avatars',
+   method: 'get',
+   responses: {
+      [httpStatusCode.OK]: jsonContent(AvatarsSchema, 'OK_RESPONSE'),
+   },
+});
+
+export const getAllElements = createRoute({
+   tags,
+   path: '/elements',
+   method: 'get',
+   responses: {
+      [httpStatusCode.OK]: jsonContent(ElementsSchema, 'OK_RESPONSE'),
+   },
+});
+
 export type SignupRoute = typeof signup;
 export type SigninRoute = typeof signin;
+export type GetAllAvatarsRoute = typeof getAllAvatars;
+export type GetAllElementsRoutes = typeof getAllElements;

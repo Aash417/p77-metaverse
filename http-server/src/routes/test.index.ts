@@ -5,7 +5,7 @@ import { createMessageObjectSchema } from 'stoker/openapi/schemas';
 
 import { createRouter } from '@/lib/create-app';
 
-export const index = createRouter().openapi(
+export const test = createRouter().openapi(
    createRoute({
       tags: ['Index'],
       method: 'get',

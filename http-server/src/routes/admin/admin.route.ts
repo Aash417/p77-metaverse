@@ -4,12 +4,12 @@ import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createMessageObjectSchema } from 'stoker/openapi/schemas';
 
 import {
-   AvatarIdScheama,
+   AvatarIdSchema,
    CreateAvatarSchema,
    CreateElementSchema,
    CreateMapSchema,
    ElementIdSchema,
-   MapIdScheama,
+   MapIdSchema,
    UpdateElementSchema,
 } from '@/lib/types';
 
@@ -51,7 +51,7 @@ export const createAvatar = createRoute({
       body: jsonContentRequired(CreateAvatarSchema, 'create an avatar'),
    },
    responses: {
-      [httpStatusCode.OK]: jsonContent(AvatarIdScheama, 'OK RESPONSE'),
+      [httpStatusCode.OK]: jsonContent(AvatarIdSchema, 'OK RESPONSE'),
    },
 });
 
@@ -63,7 +63,7 @@ export const createMap = createRoute({
       body: jsonContentRequired(CreateMapSchema, 'create a map'),
    },
    responses: {
-      [httpStatusCode.OK]: jsonContent(MapIdScheama, 'OK RESPONSE'),
+      [httpStatusCode.OK]: jsonContent(MapIdSchema, 'OK RESPONSE'),
    },
 });
 

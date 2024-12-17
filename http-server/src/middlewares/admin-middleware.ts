@@ -25,7 +25,3 @@ export async function adminMiddleware(c: Context, next: Next) {
       return c.json({ message: 'Invalid Token' }, 401);
    }
 }
-
-{
-   ('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbTRxMWN1MWcwMDAwN2twMHUxNXc1YWVuIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzM0MjkzMTc0fQ.IidhxGgfU-UzU538I3E7fK5nQsCwGxzMqH7yvxPAJxc');
-}

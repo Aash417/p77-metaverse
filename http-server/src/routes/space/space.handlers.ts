@@ -91,7 +91,7 @@ export const deleteSpace: AppRouteHandler<DeleteSpace> = async (c) => {
 
    if (userId !== space?.creatorId) {
       return c.json(
-         { message: 'Unauthorized to performe this action' },
+         { message: 'Unauthorized to perform this action' },
          httpStatusCode.FORBIDDEN,
       );
    }
@@ -183,7 +183,7 @@ export const removeElement: AppRouteHandler<RemoveElement> = async (c) => {
       spaceElement.space.creatorId !== userId
    ) {
       return c.json(
-         { message: 'Unauthorized to performe this action' },
+         { message: 'Unauthorized to perform this action' },
          httpStatusCode.FORBIDDEN,
       );
    }
