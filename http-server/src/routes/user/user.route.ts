@@ -4,8 +4,8 @@ import { jsonContent, jsonContentRequired } from 'stoker/openapi/helpers';
 import { createMessageObjectSchema } from 'stoker/openapi/schemas';
 
 import {
+   IdsQuerySchema,
    UpdateMetadataSchema,
-   UserIdsSchema,
    UsersMetaDataSchema,
 } from '@/lib/types';
 
@@ -28,10 +28,10 @@ export const userMetadata = createRoute({
 
 export const userBulkMetadata = createRoute({
    tags,
-   path: '/user/metadata/bulk/{ids}',
+   path: '/user/metadata/bulk',
    method: 'get',
    request: {
-      params: UserIdsSchema,
+      query: IdsQuerySchema,
    },
    responses: {
       [httpStatusCode.OK]: jsonContent(UsersMetaDataSchema, 'api index'),

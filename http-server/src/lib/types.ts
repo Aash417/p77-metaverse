@@ -146,6 +146,15 @@ export const MapIdSchema = z.object({
    mapId: z.string(),
 });
 
+export const IdsQuerySchema = z.object({
+   ids: z.string().openapi({
+      param: {
+         name: 'ids',
+         in: 'query',
+      },
+   }),
+});
+
 /////////////////////////////////////////
 // HELPER FUNCTIONS
 /////////////////////////////////////////

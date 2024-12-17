@@ -75,7 +75,7 @@ export const signup: AppRouteHandler<SignupRoute> = async (c) => {
       );
    }
 
-   return c.json({ id: user.id }, httpStatusCode.OK);
+   return c.json({ userId: user.id }, httpStatusCode.OK);
 };
 
 export const getAllAvatars: AppRouteHandler<GetAllAvatarsRoute> = async (c) => {

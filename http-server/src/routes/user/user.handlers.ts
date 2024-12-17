@@ -18,9 +18,9 @@ export const userMetadata: AppRouteHandler<UserMetadata> = async (c) => {
 export const userBulkMetadata: AppRouteHandler<UserBulkMetadata> = async (
    c,
 ) => {
-   const { ids } = c.req.param();
+   const { ids } = c.req.valid('query');
 
-   const userIds = ids.slice(1, ids.length - 1).split(',');
+   const userIds = ids?.slice(1, ids?.length - 1).split(',');
    const metadata = await db.user.findMany({
       where: {
          id: { in: userIds },
@@ -33,7 +33,7 @@ export const userBulkMetadata: AppRouteHandler<UserBulkMetadata> = async (
 
    const avatars = metadata.map((m) => ({
       userId: m.id,
-      avatarId: m.avatar?.imageUrl,
+      avatarId: m.avatar?.imageUrl || '',
    }));
 
    return c.json({ avatars });

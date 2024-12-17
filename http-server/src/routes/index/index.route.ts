@@ -48,7 +48,7 @@ export const signup = createRoute({
    responses: {
       [httpStatusCode.OK]: jsonContent(
          z.object({
-            id: z.string().cuid(),
+            userId: z.string().cuid(),
          }),
          'OK_RESPONSE',
       ),
