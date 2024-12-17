@@ -101,10 +101,6 @@ export const UsersMetaDataSchema = z.object({
 
 export type UsersMetaData = z.infer<typeof UsersMetaDataSchema>;
 
-export const SpaceIdSchema = z.object({
-   spaceId: z.string(),
-});
-
 export const GetAllSpacesSchema = z.object({
    spaces: z.array(
       z.object({
@@ -153,6 +149,10 @@ export const IdsQuerySchema = z.object({
          in: 'query',
       },
    }),
+});
+
+export const SpaceIdSchema = z.object({
+   spaceId: z.string(),
 });
 
 /////////////////////////////////////////

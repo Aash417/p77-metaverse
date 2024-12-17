@@ -15,6 +15,7 @@ import {
    MySpaceSchema,
    SpaceIdSchema,
 } from '@/lib/types';
+import { z } from '@hono/zod-openapi';
 
 const tags = ['Space'];
 
@@ -38,12 +39,16 @@ export const createSpace = createRoute({
    },
 });
 
+export const SpaceIdQuerySchema = z.object({
+   spaceId: z.string().openapi({ param: { name: 'spaceId', in: 'path' } }), // Parameter named "id" in the URL path [1, 3, 10]
+});
+
 export const deleteSpace = createRoute({
    tags,
-   path: '/space/:spaceId',
+   path: '/space/{spaceId}',
    method: 'delete',
    request: {
-      params: SpaceIdSchema,
+      params: SpaceIdQuerySchema,
    },
    responses: {
       [httpStatusCode.NO_CONTENT]: { description: 'SPACE DELETED' },

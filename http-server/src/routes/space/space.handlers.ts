@@ -76,7 +76,7 @@ export const createSpace: AppRouteHandler<CreateSpace> = async (c) => {
 
 export const deleteSpace: AppRouteHandler<DeleteSpace> = async (c) => {
    const userId = c.get('userId');
-   const { spaceId } = c.req.param();
+   const { spaceId } = c.req.valid('param');
 
    const space = await db.space.findUnique({
       where: { id: spaceId },
@@ -95,7 +95,6 @@ export const deleteSpace: AppRouteHandler<DeleteSpace> = async (c) => {
          httpStatusCode.FORBIDDEN,
       );
    }
-
    await db.space.delete({
       where: { id: spaceId },
    });
@@ -108,7 +107,7 @@ export const getAllSpace: AppRouteHandler<GetAllSpace> = async (c) => {
 
    const spaces = await db.space.findMany({
       where: {
-         id: userId,
+         creatorId: userId,
       },
    });
 
