@@ -10,9 +10,11 @@ import { notFoundSchema } from '@/lib/constants';
 import {
    AddElementSchema,
    CreateSpaceSchema,
-   DeleteElementSchema,
+   ElementIdSchema,
    GetAllSpacesSchema,
    MySpaceSchema,
+   RemoveElementSchema,
+   SpaceIdQuerySchema,
    SpaceIdSchema,
 } from '@/lib/types';
 import { z } from '@hono/zod-openapi';
@@ -37,10 +39,6 @@ export const createSpace = createRoute({
          'INTERNAL SERVER_ERROR',
       ),
    },
-});
-
-export const SpaceIdQuerySchema = z.object({
-   spaceId: z.string().openapi({ param: { name: 'spaceId', in: 'path' } }), // Parameter named "id" in the URL path [1, 3, 10]
 });
 
 export const deleteSpace = createRoute({
@@ -102,8 +100,8 @@ export const removeElement = createRoute({
    method: 'delete',
    request: {
       body: jsonContentRequired(
-         DeleteElementSchema,
-         'remove element to a space',
+         RemoveElementSchema,
+         'remove a element from a space',
       ),
    },
    responses: {
@@ -114,6 +112,14 @@ export const removeElement = createRoute({
       [httpStatusCode.FORBIDDEN]: jsonContent(
          createMessageObjectSchema('Unauthorized request'),
          'FORBIDDEN',
+      ),
+      [httpStatusCode.NOT_FOUND]: jsonContent(
+         notFoundSchema,
+         'ELEMENT NOT FOUND',
+      ),
+      [httpStatusCode.UNPROCESSABLE_ENTITY]: jsonContent(
+         createErrorSchema(ElementIdSchema),
+         'INVALID ID',
       ),
    },
 });

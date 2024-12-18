@@ -104,7 +104,6 @@ export const deleteSpace: AppRouteHandler<DeleteSpace> = async (c) => {
 
 export const getAllSpace: AppRouteHandler<GetAllSpace> = async (c) => {
    const userId = c.get('userId');
-
    const spaces = await db.space.findMany({
       where: {
          creatorId: userId,
@@ -172,11 +171,13 @@ export const addElement: AppRouteHandler<AddElement> = async (c) => {
 export const removeElement: AppRouteHandler<RemoveElement> = async (c) => {
    const body = c.req.valid('json');
    const userId = c.get('userId');
-
    const spaceElement = await db.spaceElements.findFirst({
-      where: { id: body.id },
+      where: { id: body.spaceElementId },
       include: { space: true },
    });
+
+   if (!spaceElement)
+      return c.json({ message: 'Element not found' }, httpStatusCode.NOT_FOUND);
    if (
       !spaceElement?.space.creatorId ||
       spaceElement.space.creatorId !== userId
@@ -188,7 +189,7 @@ export const removeElement: AppRouteHandler<RemoveElement> = async (c) => {
    }
 
    await db.spaceElements.delete({
-      where: { id: body.id },
+      where: { id: body.spaceElementId },
    });
 
    return c.json({ message: 'Element deleted' }, httpStatusCode.OK);

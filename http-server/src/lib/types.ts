@@ -38,8 +38,8 @@ export const CreateSpaceSchema = z.object({
    mapId: z.string().optional(),
 });
 
-export const DeleteElementSchema = z.object({
-   id: z.string(),
+export const RemoveElementSchema = z.object({
+   spaceElementId: z.string(),
 });
 
 export const AddElementSchema = z.object({
@@ -153,6 +153,10 @@ export const IdsQuerySchema = z.object({
 
 export const SpaceIdSchema = z.object({
    spaceId: z.string(),
+});
+
+export const SpaceIdQuerySchema = z.object({
+   spaceId: z.string().openapi({ param: { name: 'spaceId', in: 'path' } }), // Parameter named "id" in the URL path [1, 3, 10]
 });
 
 /////////////////////////////////////////
