@@ -708,3 +708,189 @@ describe('Arena endpoints', () => {
 		expect(response.status).toBe(200);
 	});
 });
+
+describe('Admin Endpoints', () => {
+	let adminToken;
+	let adminId;
+	let userToken;
+	let userId;
+
+	beforeAll(async () => {
+		const username = `test-${Math.random()}`;
+		const password = '123456';
+		const signupResponse = await axios.post(`${BACKEND_URL}/signup`, {
+			username,
+			password,
+			role: 'Admin',
+		});
+		adminId = signupResponse.data.userId;
+
+		const response = await axios.post(`${BACKEND_URL}/signin`, {
+			username,
+			password,
+		});
+		adminToken = response.data.token;
+
+		const userSignupResponse = await axios.post(`${BACKEND_URL}/signup`, {
+			username: username + '-user',
+			password,
+			role: 'User',
+		});
+		userId = userSignupResponse.data.userId;
+
+		const userSigninResponse = await axios.post(`${BACKEND_URL}/signin`, {
+			username: username + '-user',
+			password,
+		});
+		userToken = userSigninResponse.data.token;
+	});
+
+	test('User is not able to hit admin Endpoints', async () => {
+		const elementResponse = await axios.post(
+			`${BACKEND_URL}/admin/element`,
+			{
+				imageUrl:
+					'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRCRca3wAR4zjPPTzeIY9rSwbbqB6bB2hVkoTXN4eerXOIkJTG1GpZ9ZqSGYafQPToWy_JTcmV5RHXsAsWQC3tKnMlH_CsibsSZ5oJtbakq&usqp=CAE',
+				width: 1,
+				height: 1,
+				static: true,
+			},
+			{
+				headers: {
+					authorization: `Bearer ${userToken}`,
+				},
+			}
+		);
+
+		const mapResponse = await axios.post(
+			`${BACKEND_URL}/admin/map`,
+			{
+				thumbnail: 'https://thumbnail.com/a.png',
+				dimensions: '100x200',
+				name: 'test space',
+				defaultElements: [],
+			},
+			{
+				headers: {
+					authorization: `Bearer ${userToken}`,
+				},
+			}
+		);
+
+		const avatarResponse = await axios.post(
+			`${BACKEND_URL}/admin/avatar`,
+			{
+				imageUrl:
+					'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm3RFDZM21teuCMFYx_AROjt-AzUwDBROFww&s',
+				name: 'Timmy',
+			},
+			{
+				headers: {
+					authorization: `Bearer ${userToken}`,
+				},
+			}
+		);
+
+		const updateElementResponse = await axios.put(
+			`${BACKEND_URL}/admin/element/123`,
+			{
+				imageUrl:
+					'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm3RFDZM21teuCMFYx_AROjt-AzUwDBROFww&s',
+			},
+			{
+				headers: {
+					authorization: `Bearer ${userToken}`,
+				},
+			}
+		);
+
+		expect(elementResponse.status).toBe(401);
+		expect(mapResponse.status).toBe(401);
+		expect(avatarResponse.status).toBe(401);
+		expect(updateElementResponse.status).toBe(401);
+	});
+
+	test('Admin is able to hit admin Endpoints', async () => {
+		const elementResponse = await axios.post(
+			`${BACKEND_URL}/admin/element`,
+			{
+				imageUrl:
+					'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRCRca3wAR4zjPPTzeIY9rSwbbqB6bB2hVkoTXN4eerXOIkJTG1GpZ9ZqSGYafQPToWy_JTcmV5RHXsAsWQC3tKnMlH_CsibsSZ5oJtbakq&usqp=CAE',
+				width: 1,
+				height: 1,
+				static: true,
+			},
+			{
+				headers: {
+					authorization: `Bearer ${adminToken}`,
+				},
+			}
+		);
+
+		const mapResponse = await axios.post(
+			`${BACKEND_URL}/admin/map`,
+			{
+				thumbnail: 'https://thumbnail.com/a.png',
+				name: 'Space',
+				dimensions: '100x200',
+				defaultElements: [],
+			},
+			{
+				headers: {
+					authorization: `Bearer ${adminToken}`,
+				},
+			}
+		);
+
+		const avatarResponse = await axios.post(
+			`${BACKEND_URL}/admin/avatar`,
+			{
+				imageUrl:
+					'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm3RFDZM21teuCMFYx_AROjt-AzUwDBROFww&s',
+				name: 'Timmy',
+			},
+			{
+				headers: {
+					authorization: `Bearer ${adminToken}`,
+				},
+			}
+		);
+
+		expect(elementResponse.status).toBe(200);
+		expect(mapResponse.status).toBe(200);
+		expect(avatarResponse.status).toBe(200);
+	});
+
+	test('Admin is able to update the imageUrl for an element', async () => {
+		const elementResponse = await axios.post(
+			`${BACKEND_URL}/admin/element`,
+			{
+				imageUrl:
+					'https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRCRca3wAR4zjPPTzeIY9rSwbbqB6bB2hVkoTXN4eerXOIkJTG1GpZ9ZqSGYafQPToWy_JTcmV5RHXsAsWQC3tKnMlH_CsibsSZ5oJtbakq&usqp=CAE',
+				width: 1,
+				height: 1,
+				static: true,
+			},
+			{
+				headers: {
+					authorization: `Bearer ${adminToken}`,
+				},
+			}
+		);
+
+		const updateElementResponse = await axios.put(
+			`${BACKEND_URL}/admin/element/${elementResponse.data.elementId}`,
+			{
+				imageUrl:
+					'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm3RFDZM21teuCMFYx_AROjt-AzUwDBROFww&s',
+			},
+			{
+				headers: {
+					authorization: `Bearer ${adminToken}`,
+				},
+			}
+		);
+
+		expect(updateElementResponse.status).toBe(200);
+	});
+});
