@@ -1,7 +1,9 @@
 const axios2 = require('axios');
+const { WebSocket } = require('ws');
 
+// const BACKEND_URL = 'https://metaverse-http-server.vercel.app';
 const BACKEND_URL = 'http://localhost:9000';
-// const WS_URL = "ws://localhost:3001"
+const WS_URL = 'ws://localhost:9001';
 
 const axios = {
 	post: async (...args) => {
@@ -253,20 +255,17 @@ describe('Space information', () => {
 	let element1Id;
 	let element2Id;
 	let adminToken;
-	let adminId;
 	let userToken;
-	let userId;
 
 	beforeAll(async () => {
 		const username = `test-${Math.random()}`;
 		const password = '123456';
 
-		const signupResponse = await axios.post(`${BACKEND_URL}/signup`, {
+		await axios.post(`${BACKEND_URL}/signup`, {
 			username,
 			password,
 			role: 'Admin',
 		});
-		adminId = signupResponse.data.userId;
 
 		const response = await axios.post(`${BACKEND_URL}/signin`, {
 			username,
@@ -274,12 +273,11 @@ describe('Space information', () => {
 		});
 		adminToken = response.data.token;
 
-		const userSignupResponse = await axios.post(`${BACKEND_URL}/signup`, {
+		await axios.post(`${BACKEND_URL}/signup`, {
 			username: username + '-user',
 			password,
 			role: 'User',
 		});
-		userId = userSignupResponse.data.userId;
 
 		const userSigninResponse = await axios.post(`${BACKEND_URL}/signin`, {
 			username: username + '-user',
@@ -510,20 +508,17 @@ describe('Arena endpoints', () => {
 	let element1Id;
 	let element2Id;
 	let adminToken;
-	let adminId;
 	let userToken;
-	let userId;
 	let spaceId;
 
 	beforeAll(async () => {
 		const username = `test-${Math.random()}`;
 		const password = '123456';
-		const signupResponse = await axios.post(`${BACKEND_URL}/signup`, {
+		await axios.post(`${BACKEND_URL}/signup`, {
 			username,
 			password,
 			role: 'Admin',
 		});
-		adminId = signupResponse.data.userId;
 
 		const response = await axios.post(`${BACKEND_URL}/signin`, {
 			username,
@@ -531,12 +526,11 @@ describe('Arena endpoints', () => {
 		});
 		adminToken = response.data.token;
 
-		const userSignupResponse = await axios.post(`${BACKEND_URL}/signup`, {
+		await axios.post(`${BACKEND_URL}/signup`, {
 			username: username + '-user',
 			password,
 			role: 'User',
 		});
-		userId = userSignupResponse.data.userId;
 
 		const userSigninResponse = await axios.post(`${BACKEND_URL}/signin`, {
 			username: username + '-user',
@@ -711,19 +705,16 @@ describe('Arena endpoints', () => {
 
 describe('Admin Endpoints', () => {
 	let adminToken;
-	let adminId;
 	let userToken;
-	let userId;
 
 	beforeAll(async () => {
 		const username = `test-${Math.random()}`;
 		const password = '123456';
-		const signupResponse = await axios.post(`${BACKEND_URL}/signup`, {
+		await axios.post(`${BACKEND_URL}/signup`, {
 			username,
 			password,
 			role: 'Admin',
 		});
-		adminId = signupResponse.data.userId;
 
 		const response = await axios.post(`${BACKEND_URL}/signin`, {
 			username,
@@ -731,12 +722,11 @@ describe('Admin Endpoints', () => {
 		});
 		adminToken = response.data.token;
 
-		const userSignupResponse = await axios.post(`${BACKEND_URL}/signup`, {
+		await axios.post(`${BACKEND_URL}/signup`, {
 			username: username + '-user',
 			password,
 			role: 'User',
 		});
-		userId = userSignupResponse.data.userId;
 
 		const userSigninResponse = await axios.post(`${BACKEND_URL}/signin`, {
 			username: username + '-user',
