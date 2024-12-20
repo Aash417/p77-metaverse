@@ -20,7 +20,7 @@ export class User {
 	private spaceId?: string;
 	private x: number;
 	private y: number;
-	private ws: WebSocket;
+	private readonly ws: WebSocket;
 
 	constructor(ws: WebSocket) {
 		this.id = getRandomString(10);
