@@ -231,7 +231,7 @@ export const QueryModeSchema = z.enum(['default', 'insensitive']);
 
 export const NullsOrderSchema = z.enum(['first', 'last']);
 
-export const RoleSchema = z.enum(['Admin', 'User']);
+export const RoleSchema = z.enum(['admin', 'user']);
 
 export type RoleType = `${z.infer<typeof RoleSchema>}`;
 

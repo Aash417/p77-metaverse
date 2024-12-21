@@ -32,16 +32,14 @@ export class User {
 
 	initHandlers() {
 		this.ws.on('message', async (data) => {
-			console.log(data);
 			const parsedData = JSON.parse(data.toString());
-			console.log(parsedData);
-			console.log('parsedData');
+			console.log('parsedData :', parsedData);
+
 			switch (parsedData.type) {
 				case 'join': {
-					console.log('join received 1');
-
 					const spaceId = parsedData.payload.spaceId;
 					const token = parsedData.payload.token;
+
 					const userId = (jwt.verify(token, JWT_PASSWORD) as JwtPayload).userId;
 					if (!userId) {
 						this.ws.close();
@@ -55,7 +53,6 @@ export class User {
 							id: spaceId,
 						},
 					});
-
 					if (!space) {
 						this.ws.close();
 						return;

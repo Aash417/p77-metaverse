@@ -1,3 +1,5 @@
+import type { Role } from '@prisma/client';
+
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import * as httpStatusCode from 'stoker/http-status-codes';
@@ -65,6 +67,7 @@ export const signup: AppRouteHandler<SignupRoute> = async (c) => {
    const user = await db.user.create({
       data: {
          ...body,
+         role: body.role?.toLowerCase() as Role,
          password: hashedPassword,
       },
    });
