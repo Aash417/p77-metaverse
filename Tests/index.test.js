@@ -125,7 +125,7 @@ describe('User metadata endpoint', () => {
 		await axios.post(`${BACKEND_URL}/signup`, {
 			username,
 			password,
-			role: 'Admin',
+			role: 'admin',
 		});
 		const response = await axios.post(`${BACKEND_URL}/signin`, {
 			username,
@@ -201,7 +201,7 @@ describe('User avatar information', () => {
 		const signupResponse = await axios.post(`${BACKEND_URL}/signup`, {
 			username,
 			password,
-			role: 'Admin',
+			role: 'admin',
 		});
 		userId = signupResponse.data.userId;
 
@@ -264,21 +264,18 @@ describe('Space information', () => {
 		await axios.post(`${BACKEND_URL}/signup`, {
 			username,
 			password,
-			role: 'Admin',
+			role: 'admin',
 		});
-
-		const response = await axios.post(`${BACKEND_URL}/signin`, {
+		const adminSignin = await axios.post(`${BACKEND_URL}/signin`, {
 			username,
 			password,
 		});
-		adminToken = response.data.token;
+		adminToken = adminSignin.data.token;
 
 		await axios.post(`${BACKEND_URL}/signup`, {
 			username: username + '-user',
 			password,
-			role: 'User',
 		});
-
 		const userSigninResponse = await axios.post(`${BACKEND_URL}/signin`, {
 			username: username + '-user',
 			password,
@@ -517,26 +514,23 @@ describe('Arena endpoints', () => {
 		await axios.post(`${BACKEND_URL}/signup`, {
 			username,
 			password,
-			role: 'Admin',
+			role: 'admin',
 		});
-
-		const response = await axios.post(`${BACKEND_URL}/signin`, {
+		const adminSignin = await axios.post(`${BACKEND_URL}/signin`, {
 			username,
 			password,
 		});
-		adminToken = response.data.token;
+		adminToken = adminSignin.data.token;
 
 		await axios.post(`${BACKEND_URL}/signup`, {
 			username: username + '-user',
 			password,
-			role: 'User',
 		});
-
-		const userSigninResponse = await axios.post(`${BACKEND_URL}/signin`, {
+		const userSignin = await axios.post(`${BACKEND_URL}/signin`, {
 			username: username + '-user',
 			password,
 		});
-		userToken = userSigninResponse.data.token;
+		userToken = userSignin.data.token;
 
 		const element1Response = await axios.post(
 			`${BACKEND_URL}/admin/element`,
@@ -713,7 +707,7 @@ describe('Admin Endpoints', () => {
 		await axios.post(`${BACKEND_URL}/signup`, {
 			username,
 			password,
-			role: 'Admin',
+			role: 'admin',
 		});
 
 		const response = await axios.post(`${BACKEND_URL}/signin`, {
@@ -915,23 +909,22 @@ describe('Websocket tests', () => {
 		const username = `test-${Math.random()}`;
 		const password = '123456';
 
-		const signupResponse = await axios.post(`${BACKEND_URL}/signup`, {
+		const adminSingup = await axios.post(`${BACKEND_URL}/signup`, {
 			username,
 			password,
-			role: 'Admin',
+			role: 'admin',
 		});
-		adminUserId = signupResponse.data.userId;
+		adminUserId = adminSingup.data.userId;
 
-		const response = await axios.post(`${BACKEND_URL}/signin`, {
+		const adminSignin = await axios.post(`${BACKEND_URL}/signin`, {
 			username,
 			password,
 		});
-		adminToken = response.data.token;
+		adminToken = adminSignin.data.token;
 
 		const userSignupResponse = await axios.post(`${BACKEND_URL}/signup`, {
 			username: username + '-user',
 			password,
-			role: 'User',
 		});
 		userId = userSignupResponse.data.userId;
 

@@ -17,7 +17,7 @@ function getRandomString(length: number) {
 export class User {
 	public id: string;
 	public userId?: string;
-	private spaceId?: string;
+	public spaceId?: string;
 	private x: number;
 	private y: number;
 	private readonly ws: WebSocket;
@@ -35,55 +35,78 @@ export class User {
 			const parsedData = JSON.parse(data.toString());
 			console.log('parsedData :', parsedData);
 
-			switch (parsedData.type) {
-				case 'join': {
-					const spaceId = parsedData.payload.spaceId;
-					const token = parsedData.payload.token;
+			if (parsedData.type === 'join') {
+				const spaceId = parsedData.payload.spaceId;
+				const token = parsedData.payload.token;
+				const userId = (jwt.verify(token, JWT_PASSWORD) as JwtPayload).userId;
+				if (!userId) {
+					this.ws.close();
+					return;
+				}
+				this.userId = userId;
 
-					const userId = (jwt.verify(token, JWT_PASSWORD) as JwtPayload).userId;
-					if (!userId) {
-						this.ws.close();
-						return;
-					}
-					console.log('join received 2');
+				const space = await db.space.findFirst({
+					where: {
+						id: spaceId,
+					},
+				});
+				if (!space) {
+					this.ws.close();
+					return;
+				}
+				this.spaceId = spaceId;
 
-					this.userId = userId;
-					const space = await db.space.findFirst({
-						where: {
-							id: spaceId,
+				RoomManager.getInstance().addUser(spaceId, this);
+				this.x = 10;
+				this.y = 10;
+				this.send({
+					type: 'space-joined',
+					payload: {
+						spawn: {
+							x: this.x,
+							y: this.y,
 						},
-					});
-					if (!space) {
-						this.ws.close();
-						return;
-					}
-					console.log('join received 4');
+						users:
+							RoomManager.getInstance()
+								.rooms.get(spaceId)
+								?.filter((x) => x.id !== this.id)
+								?.map((u) => ({ id: u.id })) ?? [],
+					},
+				});
 
-					this.spaceId = spaceId;
-					RoomManager.getInstance().addUser(spaceId, this);
-					this.x = Math.floor(Math.random() * space?.width);
-					this.y = Math.floor(Math.random() * space?.height);
-					this.send({
-						type: 'space-joined',
+				RoomManager.getInstance().broadcast(
+					{
+						type: 'user-joined',
 						payload: {
-							spawn: {
-								x: this.x,
-								y: this.y,
-							},
-							users:
-								RoomManager.getInstance()
-									.rooms.get(spaceId)
-									?.filter((x) => x.id !== this.id)
-									?.map((u) => ({ id: u.id })) ?? [],
+							userId: this.userId,
+							x: this.x,
+							y: this.y,
 						},
-					});
-					console.log('join received 5');
+					},
+					this,
+					this.spaceId!
+				);
+				return;
+			}
 
+			if (parsedData.type === 'move') {
+				const moveX = parsedData.payload.x;
+				const moveY = parsedData.payload.y;
+
+				const xDisplacement = Math.abs(this.x - moveX);
+				const yDisplacement = Math.abs(this.y - moveY);
+
+				const validMove =
+					(xDisplacement == 0 && yDisplacement == 1) ||
+					(xDisplacement == 1 && yDisplacement == 0);
+
+				if (validMove) {
+					this.x = moveX;
+					this.y = moveY;
 					RoomManager.getInstance().broadcast(
 						{
-							type: 'user-joined',
+							type: 'movement',
 							payload: {
-								userId: this.userId,
 								x: this.x,
 								y: this.y,
 							},
@@ -91,41 +114,16 @@ export class User {
 						this,
 						this.spaceId!
 					);
-					break;
+					return;
 				}
-				case 'move': {
-					const moveX = parsedData.payload.x;
-					const moveY = parsedData.payload.y;
-					const xDisplacement = Math.abs(this.x - moveX);
-					const yDisplacement = Math.abs(this.y - moveY);
-					if (
-						(xDisplacement == 1 && yDisplacement == 0) ||
-						(xDisplacement == 0 && yDisplacement == 1)
-					) {
-						this.x = moveX;
-						this.y = moveY;
-						RoomManager.getInstance().broadcast(
-							{
-								type: 'movement',
-								payload: {
-									x: this.x,
-									y: this.y,
-								},
-							},
-							this,
-							this.spaceId!
-						);
-						return;
-					}
 
-					this.send({
-						type: 'movement-rejected',
-						payload: {
-							x: this.x,
-							y: this.y,
-						},
-					});
-				}
+				this.send({
+					type: 'movement-rejected',
+					payload: {
+						x: this.x,
+						y: this.y,
+					},
+				});
 			}
 		});
 	}

@@ -20,7 +20,7 @@ export type AppRouteHandler<t extends RouteConfig> = RouteHandler<
 export const SignupSchema = z.object({
    username: z.string().min(1),
    password: z.string().min(1),
-   role: z.enum(['User', 'Admin']).optional(),
+   role: z.enum(['user', 'admin']).optional(),
 });
 
 export const SigninSchema = z.object({

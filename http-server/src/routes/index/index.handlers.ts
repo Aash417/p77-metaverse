@@ -66,9 +66,9 @@ export const signup: AppRouteHandler<SignupRoute> = async (c) => {
 
    const user = await db.user.create({
       data: {
-         ...body,
-         role: body.role?.toLowerCase() as Role,
+         username: body.username,
          password: hashedPassword,
+         role: body.role as Role,
       },
    });
    if (!user) {

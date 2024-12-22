@@ -16,7 +16,7 @@ export async function adminMiddleware(c: Context, next: Next) {
          userId: string;
          role: string;
       };
-      if (decoded.role !== 'Admin')
+      if (decoded.role !== 'admin')
          return c.json({ message: 'Unauthorized' }, 401);
 
       c.set('userId', decoded.userId);
