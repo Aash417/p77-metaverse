@@ -244,7 +244,7 @@ export default function Page(params: Props) {
          <div className="overflow-hidden rounded-lg border">
             <canvas
                ref={canvasRef}
-               width={1000}
+               width={1500}
                height={1000}
                className="bg-white"
             />

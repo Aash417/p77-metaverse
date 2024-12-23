@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import { useMutation } from "@tanstack/react-query";
-import axios from 'axios'
-import { useRouter } from "next/navigation";
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 type Props = {
-   username: string,
-   password: string
-}
+   username: string;
+   password: string;
+};
 
 async function postData(values: Props) {
    try {
@@ -16,18 +16,16 @@ async function postData(values: Props) {
    } catch (error) {
       console.error(error);
    }
-
-
 }
 
 export function useSignup() {
-   const router = useRouter()
+   const router = useRouter();
    const mutation = useMutation({
       mutationFn: postData,
       onSuccess: () => {
-         router.push('/auth/signin')
-         console.log("Success!");
-      }
+         router.push('/auth/signin');
+         console.log('Success!');
+      },
    });
 
    return mutation;

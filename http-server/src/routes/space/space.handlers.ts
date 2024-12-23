@@ -103,12 +103,7 @@ export const deleteSpace: AppRouteHandler<DeleteSpace> = async (c) => {
 };
 
 export const getAllSpace: AppRouteHandler<GetAllSpace> = async (c) => {
-   const userId = c.get('userId');
-   const spaces = await db.space.findMany({
-      where: {
-         creatorId: userId,
-      },
-   });
+   const spaces = await db.space.findMany();
 
    return c.json(
       {

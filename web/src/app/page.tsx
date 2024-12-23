@@ -6,7 +6,7 @@ export default function Home() {
       <div className="flex h-screen flex-col items-center justify-center gap-12">
          <h1 className="text-6xl text-red-400">Metaverse v1</h1>
 
-         <Link href="/auth/signup">
+         <Link href="/auth/signin">
             <Button variant="link">Get started</Button>
          </Link>
       </div>

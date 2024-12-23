@@ -1,10 +1,9 @@
-
 import { useToken } from '@/lib/tokenContext';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 export function useGetSpaces() {
-   const { token } = useToken()
+   const { token } = useToken();
    const query = useQuery({
       queryKey: ['spaces'],
       queryFn: async () => {
@@ -19,4 +18,3 @@ export function useGetSpaces() {
    });
    return query;
 }
-

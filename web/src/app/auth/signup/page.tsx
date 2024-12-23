@@ -39,13 +39,12 @@ export default function Signup() {
          password: '',
       },
    });
-   const { mutate } = useSignup()
+   const { mutate } = useSignup();
 
    function onSubmit(values: z.infer<typeof formSchema>) {
       try {
          console.log(values);
-         mutate(values)
-
+         mutate(values);
       } catch (error) {
          console.error('Form submission error', error);
          toast.error('Failed to submit the form. Please try again.');
