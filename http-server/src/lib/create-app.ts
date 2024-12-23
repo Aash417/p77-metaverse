@@ -4,6 +4,7 @@ import { expand } from 'dotenv-expand';
 import { logger } from 'hono/logger';
 import { notFound, onError, serveEmojiFavicon } from 'stoker/middlewares';
 import { defaultHook } from 'stoker/openapi';
+import { cors } from 'hono/cors';
 
 import type { AppBinding, AppOpenApi } from '@/lib/types';
 
@@ -15,6 +16,16 @@ expand(config());
 export default function createApp() {
    const app = createRouter();
 
+   app.use(
+      cors({
+         origin: [
+            'http://localhost:5173',
+            'http://localhost:3000',
+            'http://localhost:4173',
+         ],
+         credentials: true,
+      })
+   );
    app.use(serveEmojiFavicon('🔥'));
    app.use(logger());
    app.use('/user/*', userMiddleware);
