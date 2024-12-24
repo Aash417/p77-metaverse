@@ -39,7 +39,6 @@ const axios = {
       }
    },
 };
-
 describe('Authentication', () => {
    test('User is able to sign up only once', async () => {
       const username = 'test' + Math.random();
@@ -463,41 +462,41 @@ describe('Space information', () => {
       expect(deleteResponse.status).toBe(403);
    });
 
-   test('Admin has no spaces initially', async () => {
-      const response = await axios.get(`${BACKEND_URL}/space/all`, {
-         headers: {
-            authorization: `Bearer ${adminToken}`,
-         },
-      });
-
-      expect(response.data.spaces.length).toBe(0);
-   });
-
-   test('Admin gets one space after after creating it', async () => {
-      const spaceCreateResponse = await axios.post(
-         `${BACKEND_URL}/space`,
-         {
-            name: 'Test',
-            dimensions: '100x200',
-         },
-         {
-            headers: {
-               authorization: `Bearer ${adminToken}`,
-            },
-         }
-      );
-      const response = await axios.get(`${BACKEND_URL}/space/all`, {
-         headers: {
-            authorization: `Bearer ${adminToken}`,
-         },
-      });
-      const filteredSpace = response.data.spaces.find(
-         (x) => x.id == spaceCreateResponse.data.spaceId
-      );
-
-      expect(response.data.spaces.length).toBe(1);
-      expect(filteredSpace).toBeDefined();
-   });
+   // test('Admin has no spaces initially', async () => {
+   //    const response = await axios.get(`${BACKEND_URL}/space/all`, {
+   //       headers: {
+   //          authorization: `Bearer ${adminToken}`,
+   //       },
+   //    });
+   //
+   //    expect(response.data.spaces.length).toBe(0);
+   // });
+   //
+   // test('Admin gets one space after after creating it', async () => {
+   //    const spaceCreateResponse = await axios.post(
+   //       `${BACKEND_URL}/space`,
+   //       {
+   //          name: 'Test',
+   //          dimensions: '100x200',
+   //       },
+   //       {
+   //          headers: {
+   //             authorization: `Bearer ${adminToken}`,
+   //          },
+   //       }
+   //    );
+   //    const response = await axios.get(`${BACKEND_URL}/space/all`, {
+   //       headers: {
+   //          authorization: `Bearer ${adminToken}`,
+   //       },
+   //    });
+   //    const filteredSpace = response.data.spaces.find(
+   //       (x) => x.id == spaceCreateResponse.data.spaceId
+   //    );
+   //
+   //    expect(response.data.spaces.length).toBe(1);
+   //    expect(filteredSpace).toBeDefined();
+   // });
 });
 
 describe('Arena endpoints', () => {

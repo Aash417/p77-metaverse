@@ -185,13 +185,13 @@ export default function Page(params: Props) {
 
       // Draw grid
       ctx.strokeStyle = '#eee';
-      for (let i = 0; i < canvas.width; i += 50) {
+      for (let i = 0; i < canvas.width; i += 40) {
          ctx.beginPath();
          ctx.moveTo(i, 0);
          ctx.lineTo(i, canvas.height);
          ctx.stroke();
       }
-      for (let i = 0; i < canvas.height; i += 50) {
+      for (let i = 0; i < canvas.height; i += 40) {
          ctx.beginPath();
          ctx.moveTo(0, i);
          ctx.lineTo(canvas.width, i);
@@ -199,15 +199,15 @@ export default function Page(params: Props) {
       }
 
       // Draw current user
-      if (currentUser && currentUser.x) {
+      if (currentUser?.x) {
          ctx.beginPath();
          ctx.fillStyle = '#FF6B6B';
-         ctx.arc(currentUser.x * 50, currentUser.y * 50, 20, 0, Math.PI * 2);
+         ctx.arc(currentUser.x * 40, currentUser.y * 40, 20, 0, Math.PI * 2);
          ctx.fill();
          ctx.fillStyle = '#000';
          ctx.font = '14px Arial';
          ctx.textAlign = 'center';
-         ctx.fillText('You', currentUser.x * 50, currentUser.y * 50 + 40);
+         ctx.fillText('You', currentUser.x * 40, currentUser.y * 40 + 40);
       }
 
       // Draw other users
@@ -217,41 +217,44 @@ export default function Page(params: Props) {
          }
          ctx.beginPath();
          ctx.fillStyle = '#4ECDC4';
-         ctx.arc(user.x * 50, user.y * 50, 20, 0, Math.PI * 2);
+         ctx.arc(user.x * 40, user.y * 40, 15, 0, Math.PI * 2);
          ctx.fill();
          ctx.fillStyle = '#000';
          ctx.font = '14px Arial';
          ctx.textAlign = 'center';
-         ctx.fillText(`User ${user.userId}`, user.x * 50, user.y * 50 + 40);
+         ctx.fillText(`User ${user.userId}`, user.x * 40, user.y * 40 + 40);
       });
    }, [currentUser, users]);
 
    return (
-      <section
-         className="p-4"
-         onKeyDown={handleKeyDown}
-         tabIndex={0}
-         role="region"
-      >
-         <h1 className="mb-4 text-2xl font-bold">Arena</h1>
-         <div className="mb-4">
-            <p className="text-sm text-gray-600">Token: {token}</p>
-            <p className="text-sm text-gray-600">Space ID: {spaceId}</p>
-            <p className="text-sm text-gray-600">
-               Connected Users: {users.size + (currentUser ? 1 : 0)}
+      <div className='flex '>
+         <div className='w-1/4'>video</div>
+
+         <section
+            className="p-4"
+            onKeyDown={handleKeyDown}
+            tabIndex={0}
+            role="region"
+         >
+            <h1 className="mb-4 text-2xl font-bold">Playground</h1>
+            <div className="mb-4">
+               <p className="text-sm text-gray-600">Space ID: {spaceId}</p>
+               <p className="text-sm text-gray-600">
+                  Connected Users: {users.size + (currentUser ? 1 : 0)}
+               </p>
+            </div>
+            <div className="overflow-hidden rounded-lg border">
+               <canvas
+                  ref={canvasRef}
+                  width={950}
+                  height={950}
+                  className="bg-white"
+               />
+            </div>
+            <p className="mt-2 text-sm text-gray-500">
+               Use arrow keys to move your avatar
             </p>
-         </div>
-         <div className="overflow-hidden rounded-lg border">
-            <canvas
-               ref={canvasRef}
-               width={1500}
-               height={1000}
-               className="bg-white"
-            />
-         </div>
-         <p className="mt-2 text-sm text-gray-500">
-            Use arrow keys to move your avatar
-         </p>
-      </section>
+         </section>
+      </div>
    );
 }

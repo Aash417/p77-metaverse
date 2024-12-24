@@ -38,11 +38,9 @@ export class User {
 			if (parsedData.type === 'join') {
 				const spaceId = parsedData.payload.spaceId;
 				const token = parsedData.payload.token;
+				if (!token) return;
+
 				const userId = (jwt.verify(token, JWT_PASSWORD) as JwtPayload).userId;
-				if (!userId) {
-					this.ws.close();
-					return;
-				}
 				this.userId = userId;
 
 				const space = await db.space.findFirst({
