@@ -34,11 +34,10 @@ export class RoomManager {
 		this.rooms.set(spaceId, [...(this.rooms.get(spaceId) ?? []), user]);
 	}
 
-	public broadcast(message: OutgoingMessage, user: User, roomId: string) {
-		if (!this.rooms.has(roomId)) {
-			return;
-		}
-		this.rooms.get(roomId)?.forEach((u) => {
+	public broadcast(message: OutgoingMessage, user: User, spaceId: string) {
+		if (!this.rooms.has(spaceId)) return;
+
+		this.rooms.get(spaceId)?.forEach((u) => {
 			if (u.id !== user.id) {
 				u.send(message);
 			}

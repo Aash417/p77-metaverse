@@ -20,7 +20,6 @@ export default function Page() {
    const name = 'quickstart-user';
    const [token, setToken] = useState('');
 
-
    useEffect(() => {
       (async () => {
          try {
@@ -47,7 +46,7 @@ export default function Page() {
          serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
          // Use the default LiveKit theme for nice styles.
          data-lk-theme="default"
-         style={{ height: '100dvh' }}
+         style={{ height: '400px' }}
       >
          {/* Your custom component with basic video conferencing functionality. */}
          <MyVideoConference />

@@ -1,8 +1,18 @@
 'use client';
-import { Button } from '@/components/ui/button';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { useRouter } from 'next/navigation';
 
+import { Button } from '@/components/ui/button';
+import {
+   ControlBar,
+   GridLayout,
+   LiveKitRoom,
+   ParticipantTile,
+   RoomAudioRenderer,
+   useTracks,
+} from '@livekit/components-react';
+import '@livekit/components-styles';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { Track } from 'livekit-client';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 type Props = {
@@ -30,7 +40,12 @@ export default function Page(params: Readonly<Props>) {
    const router = useRouter();
    const spaceId = params.params.spaceId;
    const [token, setToken] = useState<string>('');
+   const [username, setUsername] = useState<string>('');
    const [userId, setUserId] = useState<string>('');
+
+   const room = spaceId;
+   const name = userId;
+   const [liveKitToken, setLiveKitToken] = useState('');
 
    useEffect(() => {
       if (typeof window !== 'undefined') {
@@ -65,8 +80,23 @@ export default function Page(params: Readonly<Props>) {
       router.replace('/arena');
    }
 
+   async function getLiveKitToken() {
+      try {
+         const resp = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/token?room=${room}&username=${name}`,
+         );
+         const data = await resp.json();
+         setLiveKitToken(data.token);
+      } catch (e) {
+         console.error(e);
+      }
+   }
+   function resetLiveKitToken() {
+      setLiveKitToken('');
+   }
+
    const handleWebSocketMessage = useCallback((message: WebSocketMessage) => {
-      console.log(message);
+      console.log('message :', message);
       switch (message.type) {
          case 'space-joined': {
             // Initialize current user position and other users
@@ -174,7 +204,7 @@ export default function Page(params: Readonly<Props>) {
 
    // Initialize WebSocket connection and handle URL params
    useEffect(() => {
-      console.log('one')
+      console.log('one');
       // Initialize WebSocket
       wsRef.current = new WebSocket('ws://localhost:9001'); // Replace with your WS_URL
 
@@ -261,7 +291,28 @@ export default function Page(params: Readonly<Props>) {
 
    return (
       <div className="flex">
-         <div className="w-1/4">video</div>
+         <div className="w-1/4">
+            {liveKitToken && (
+               <LiveKitRoom
+                  video={true}
+                  audio={true}
+                  token={liveKitToken}
+                  serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
+                  // Use the default LiveKit theme for nice styles.
+                  data-lk-theme="default"
+                  className="h-[300px] max-h-screen"
+                  style={{ height: '50vh' }}
+               >
+                  {/* Your custom component with basic video conferencing functionality. */}
+                  <MyVideoConference />
+                  {/* The RoomAudioRenderer takes care of room-wide audio for you. */}
+                  <RoomAudioRenderer />
+                  {/* Controls for the user to start/stop audio, video, and screen
+      share tracks and to leave the room. */}
+                  <ControlBar variation="minimal" />
+               </LiveKitRoom>
+            )}
+         </div>
 
          <section
             className="p-4"
@@ -271,13 +322,20 @@ export default function Page(params: Readonly<Props>) {
          >
             <h1 className="mb-4 text-2xl font-bold">Playground</h1>
             <div className="mb-4">
-               <p className="text-sm text-gray-600">Space ID: {spaceId}</p>
                <p className="text-sm text-gray-600">
                   Connected Users: {users.size + (currentUser ? 1 : 0)}
                </p>
-               <Button onClick={leaveRoom} variant="outline">
-                  leave space
-               </Button>
+               <div className="flex gap-2">
+                  <Button onClick={leaveRoom} variant="outline">
+                     leave space
+                  </Button>
+                  <Button onClick={getLiveKitToken} variant="outline">
+                     enable video chat
+                  </Button>
+                  <Button onClick={resetLiveKitToken} variant="destructive">
+                     disable video chat
+                  </Button>
+               </div>
             </div>
             <div className="overflow-hidden rounded-lg border">
                <canvas
@@ -292,5 +350,23 @@ export default function Page(params: Readonly<Props>) {
             </p>
          </section>
       </div>
+   );
+}
+
+function MyVideoConference() {
+   // `useTracks` returns all camera and screen share tracks. If a user
+   // joins without a published camera track, a placeholder track is returned.
+   const tracks = useTracks(
+      [
+         { source: Track.Source.Camera, withPlaceholder: true },
+         { source: Track.Source.ScreenShare, withPlaceholder: false },
+      ],
+      { onlySubscribed: false },
+   );
+
+   return (
+      <GridLayout tracks={tracks}>
+         <ParticipantTile />
+      </GridLayout>
    );
 }

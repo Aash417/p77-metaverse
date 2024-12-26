@@ -12,7 +12,7 @@ model User {
   username String  @unique
   password String
   avatarId String?
-  role     Role    @default(User)
+  role     Role    @default(user)
   spaces   Space[]
   avatar   Avatar? @relation(fields: [avatarId], references: [id], onDelete: Cascade)
 }
@@ -75,6 +75,6 @@ model Avatar {
 }
 
 enum Role {
-  Admin
-  User
+  admin
+  user
 }

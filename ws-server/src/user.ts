@@ -1,6 +1,5 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { WebSocket } from 'ws';
-import { JWT_PASSWORD } from './config';
 import db from './db';
 import { RoomManager } from './room-manager';
 import { OutgoingMessage } from './types';
@@ -38,18 +37,29 @@ export class User {
 			if (parsedData.type === 'join') {
 				const spaceId = parsedData.payload.spaceId;
 				const token = parsedData.payload.token;
-				if (!token) return;
+				if (!token) {
+					this.send({
+						message: 'token is required',
+					});
+					return;
+				}
 
-				const userId = (jwt.verify(token, JWT_PASSWORD) as JwtPayload).userId;
+				const decoded = jwt.decode(token) as JwtPayload;
+				if (!decoded) {
+					this.send({
+						message: 'token is not valid',
+					});
+					return;
+				}
+
+				const userId = decoded.userId;
 				this.userId = userId;
 
-				const space = await db.space.findFirst({
-					where: {
-						id: spaceId,
-					},
-				});
+				const space = await db.space.findFirst({ where: { id: spaceId } });
 				if (!space) {
-					this.ws.close();
+					this.send({
+						message: 'space does not exists',
+					});
 					return;
 				}
 				this.spaceId = spaceId;
@@ -97,6 +107,7 @@ export class User {
 				const validMove =
 					(xDisplacement == 0 && yDisplacement == 1) ||
 					(xDisplacement == 1 && yDisplacement == 0);
+				console.log('validMove :', validMove);
 
 				if (validMove) {
 					this.x = moveX;
