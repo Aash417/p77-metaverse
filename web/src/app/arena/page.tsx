@@ -9,11 +9,10 @@ export default function Page() {
 
    if (isLoading) return <div>loading..</div>;
 
-   console.log(data);
    return (
       <div>
-         {data.spaces.map((el: any) => (
-            <Link href={`/space/${el.id}`}>
+         {data.spaces.map((el: { id: string }) => (
+            <Link href={`/space/${el.id}`} key={el.id}>
                <Card className="w-[300px]">
                   <CardContent>{el.id}</CardContent>
                </Card>

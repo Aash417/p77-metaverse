@@ -1,5 +1,7 @@
 'use client';
-import { useToken } from '@/lib/tokenContext';
+import { Button } from '@/components/ui/button';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { useRouter } from 'next/navigation';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -24,9 +26,23 @@ interface WebSocketMessage {
    };
 }
 
-export default function Page(params: Props) {
+export default function Page(params: Readonly<Props>) {
+   const router = useRouter();
    const spaceId = params.params.spaceId;
-   const { token } = useToken();
+   const [token, setToken] = useState<string>('');
+   const [userId, setUserId] = useState<string>('');
+
+   useEffect(() => {
+      if (typeof window !== 'undefined') {
+         const token = window.localStorage.getItem('metaverse_user');
+         setToken(token ?? '');
+
+         if (token) {
+            const userId = (jwt.decode(token) as JwtPayload).userId;
+            setUserId(userId ?? '');
+         }
+      }
+   }, []);
 
    const canvasRef = useRef<HTMLCanvasElement | null>(null);
    const wsRef = useRef<WebSocket | null>(null);
@@ -34,11 +50,28 @@ export default function Page(params: Props) {
    const [currentUser, setCurrentUser] = useState<User | null>(null);
    const [users, setUsers] = useState(new Map());
 
+   function leaveRoom() {
+      if (!wsRef.current) return;
+
+      wsRef.current.send(
+         JSON.stringify({
+            type: 'user-left',
+            payload: {
+               userId,
+            },
+         }),
+      );
+
+      router.replace('/arena');
+   }
+
    const handleWebSocketMessage = useCallback((message: WebSocketMessage) => {
+      console.log(message);
       switch (message.type) {
          case 'space-joined': {
             // Initialize current user position and other users
             console.log({
+               type: message.type,
                x: message.payload.spawn?.x ?? 0,
                y: message.payload.spawn?.y ?? 0,
                userId: message.payload.userId ?? '',
@@ -141,8 +174,7 @@ export default function Page(params: Props) {
 
    // Initialize WebSocket connection and handle URL params
    useEffect(() => {
-      const urlParams = new URLSearchParams(window.location.search);
-
+      console.log('one')
       // Initialize WebSocket
       wsRef.current = new WebSocket('ws://localhost:9001'); // Replace with your WS_URL
 
@@ -163,6 +195,7 @@ export default function Page(params: Props) {
 
       wsRef.current.onmessage = (event: MessageEvent) => {
          const message = JSON.parse(event.data);
+         console.log(message);
          handleWebSocketMessage(message);
       };
 
@@ -171,7 +204,7 @@ export default function Page(params: Props) {
             wsRef.current.close();
          }
       };
-   }, [handleWebSocketMessage]);
+   }, [handleWebSocketMessage, spaceId, token]);
 
    // Draw the arena
    useEffect(() => {
@@ -202,7 +235,7 @@ export default function Page(params: Props) {
       if (currentUser?.x) {
          ctx.beginPath();
          ctx.fillStyle = '#FF6B6B';
-         ctx.arc(currentUser.x * 40, currentUser.y * 40, 20, 0, Math.PI * 2);
+         ctx.arc(currentUser.x * 40, currentUser.y * 40, 15, 0, Math.PI * 2);
          ctx.fill();
          ctx.fillStyle = '#000';
          ctx.font = '14px Arial';
@@ -227,8 +260,8 @@ export default function Page(params: Props) {
    }, [currentUser, users]);
 
    return (
-      <div className='flex '>
-         <div className='w-1/4'>video</div>
+      <div className="flex">
+         <div className="w-1/4">video</div>
 
          <section
             className="p-4"
@@ -242,6 +275,9 @@ export default function Page(params: Props) {
                <p className="text-sm text-gray-600">
                   Connected Users: {users.size + (currentUser ? 1 : 0)}
                </p>
+               <Button onClick={leaveRoom} variant="outline">
+                  leave space
+               </Button>
             </div>
             <div className="overflow-hidden rounded-lg border">
                <canvas

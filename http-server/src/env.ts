@@ -27,6 +27,10 @@ const EnvSchema = z.object({
    ]),
    DATABASE_URL: z.string().url(),
    JWT_PASSWORD: z.string(),
+
+   LIVEKIT_API_KEY: z.string(),
+   LIVEKIT_API_SECRET: z.string(),
+   LIVEKIT_URL: z.string(),
 });
 
 export type env = z.infer<typeof EnvSchema>;

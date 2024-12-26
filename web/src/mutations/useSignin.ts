@@ -1,6 +1,5 @@
 'use client';
 
-import { useToken } from '@/lib/tokenContext';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -21,13 +20,12 @@ async function postData(values: Props) {
 
 export function useSignin() {
    const router = useRouter();
-   const { setToken } = useToken();
    const mutation = useMutation({
       mutationFn: postData,
       onSuccess: (data) => {
          console.log('Success!');
 
-         setToken(data.token);
+         window.localStorage.setItem('metaverse_user', data.token);
          router.push('/arena');
       },
    });

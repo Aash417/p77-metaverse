@@ -48,10 +48,10 @@ export function createRouter() {
    });
 }
 
-export function createTestApp(router: AppOpenApi) {
-   const testApp = createApp();
-
-   testApp.route('/', router);
-
-   return testApp;
-}
+// export function createTestApp(router: AppOpenApi) {
+//    const testApp = createApp();
+//
+//    testApp.route('/', router);
+//
+//    return testApp;
+// }

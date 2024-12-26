@@ -1,9 +1,14 @@
-import { useToken } from '@/lib/tokenContext';
+'use client';
+
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 export function useGetSpaces() {
-   const { token } = useToken();
+   let token: string;
+   if (typeof window !== 'undefined') {
+      token = window.localStorage.getItem('metaverse_user') ?? '';
+   }
+
    const query = useQuery({
       queryKey: ['spaces'],
       queryFn: async () => {
