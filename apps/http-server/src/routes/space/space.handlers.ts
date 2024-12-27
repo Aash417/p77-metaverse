@@ -53,7 +53,7 @@ export const createSpace: AppRouteHandler<CreateSpace> = async (c) => {
       });
 
       await db.spaceElements.createMany({
-         data: map.mapElements.map(e => ({
+         data: map.mapElements.map((e) => ({
             spaceId: space.id,
             elementId: e.elementId,
             x: e.x!,
@@ -106,7 +106,7 @@ export const getAllSpace: AppRouteHandler<GetAllSpace> = async (c) => {
 
    return c.json(
       {
-         spaces: spaces.map(s => ({
+         spaces: spaces.map((s) => ({
             id: s.id,
             name: s.name,
             thumbnail: s.thumbnail,
@@ -139,10 +139,10 @@ export const addElement: AppRouteHandler<AddElement> = async (c) => {
    }
 
    if (
-      body.x < 0
-      || body.y < 0
-      || body.x > space.width
-      || body.y > space.height
+      body.x < 0 ||
+      body.y < 0 ||
+      body.x > space.width ||
+      body.y > space.height
    ) {
       return c.json(
          { message: 'Point is outside of the boundary' },
@@ -173,8 +173,8 @@ export const removeElement: AppRouteHandler<RemoveElement> = async (c) => {
    if (!spaceElement)
       return c.json({ message: 'Element not found' }, httpStatusCode.NOT_FOUND);
    if (
-      !spaceElement?.space.creatorId
-      || spaceElement.space.creatorId !== userId
+      !spaceElement?.space.creatorId ||
+      spaceElement.space.creatorId !== userId
    ) {
       return c.json(
          { message: 'Unauthorized to perform this action' },
@@ -208,7 +208,7 @@ export const getSpace: AppRouteHandler<GetSpace> = async (c) => {
 
    const mySpace = {
       dimensions: `${space.width}x${space.height}`,
-      elements: space.elements.map(e => ({
+      elements: space.elements.map((e) => ({
          id: e.id,
          element: {
             id: e.element.id,

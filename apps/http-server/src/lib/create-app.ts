@@ -1,10 +1,10 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { config } from 'dotenv';
 import { expand } from 'dotenv-expand';
+import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { notFound, onError, serveEmojiFavicon } from 'stoker/middlewares';
 import { defaultHook } from 'stoker/openapi';
-import { cors } from 'hono/cors';
 
 import type { AppBinding, AppOpenApi } from '@/lib/types';
 

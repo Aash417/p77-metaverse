@@ -57,7 +57,7 @@ export const createMap: AppRouteHandler<CreateMap> = async (c) => {
          height: Number.parseInt(body.dimensions.split('x')[1]),
          thumbnail: body.thumbnail,
          mapElements: {
-            create: body.defaultElements.map(e => ({
+            create: body.defaultElements.map((e) => ({
                elementId: e.elementId,
                x: e.x,
                y: e.y,

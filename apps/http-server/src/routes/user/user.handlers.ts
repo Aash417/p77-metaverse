@@ -31,7 +31,7 @@ export const userBulkMetadata: AppRouteHandler<UserBulkMetadata> = async (
       },
    });
 
-   const avatars = metadata.map(m => ({
+   const avatars = metadata.map((m) => ({
       userId: m.id,
       avatarId: m.avatar?.imageUrl || '',
    }));
