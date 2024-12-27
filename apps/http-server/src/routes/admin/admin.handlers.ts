@@ -1,13 +1,14 @@
 import db from '@repo/database/index';
 import * as httpStatusCode from 'stoker/http-status-codes';
 
-import type { AppRouteHandler } from '@/lib/types';
 import type {
    CreateAvatar,
    CreateElement,
    CreateMap,
    UpdateElement,
 } from '@/routes/admin/admin.route';
+
+import type { AppRouteHandler } from '../../lib/types';
 
 export const createElement: AppRouteHandler<CreateElement> = async (c) => {
    const body = c.req.valid('json');

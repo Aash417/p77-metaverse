@@ -3,7 +3,7 @@ import db from '@repo/database/index';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { WebSocket } from 'ws';
 import { RoomManager } from './room-manager';
-import { OutgoingMessage } from './types';
+import { OutgoingMessage } from 'http';
 
 function getRandomString(length: number) {
    const characters =
@@ -155,7 +155,7 @@ export class User {
       RoomManager.getInstance().removeUser(this, this.spaceId!);
    }
 
-   send(payload: OutgoingMessage) {
+   send(payload: any) {
       this.ws.send(JSON.stringify(payload));
    }
 }

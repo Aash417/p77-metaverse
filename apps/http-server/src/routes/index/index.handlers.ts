@@ -1,5 +1,3 @@
-import type { Role } from '@prisma/client';
-
 import db from '@repo/database/index';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -68,7 +66,7 @@ export const signup: AppRouteHandler<SignupRoute> = async (c) => {
       data: {
          username: body.username,
          password: hashedPassword,
-         role: body.role as Role,
+         role: body.role,
       },
    });
    if (!user) {
