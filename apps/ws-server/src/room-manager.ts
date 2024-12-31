@@ -1,4 +1,3 @@
-import { OutgoingMessage } from './types';
 import type { User } from './user';
 
 export class RoomManager {
@@ -34,7 +33,7 @@ export class RoomManager {
       this.rooms.set(spaceId, [...(this.rooms.get(spaceId) ?? []), user]);
    }
 
-   public broadcast(message: OutgoingMessage, user: User, spaceId: string) {
+   public broadcast(message: any, user: User, spaceId: string) {
       if (!this.rooms.has(spaceId)) return;
 
       this.rooms.get(spaceId)?.forEach((u) => {

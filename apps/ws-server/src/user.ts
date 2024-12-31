@@ -3,7 +3,6 @@ import db from '@repo/database/index';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { WebSocket } from 'ws';
 import { RoomManager } from './room-manager';
-import { OutgoingMessage } from 'http';
 
 function getRandomString(length: number) {
    const characters =
